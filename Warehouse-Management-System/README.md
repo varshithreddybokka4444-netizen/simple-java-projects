@@ -5,20 +5,23 @@ The Warehouse Management System is a console-based Java application used to mana
 It follows a clean layered architecture using Model, Service, and App packages.
 
 ---
+## Project Structure
 
-##  Project Structure
+```
+Warehouse-Management-System/
+├── README.md
+└── src/
+    └── com/
+        └── warehouse/
+            ├── app/
+            │   └── WarehouseApp.java
+            ├── model/
+            │   ├── Product.java
+            │   └── Transaction.java
+            └── service/
+                └── WarehouseService.java
+```
 
-com.warehouse
-│
-├── app
-│ └── WarehouseApp.java
-│
-├── model
-│ ├── Product.java
-│ └── Transaction.java
-│
-└── service
-└── WarehouseService.java
 
 ---
 
