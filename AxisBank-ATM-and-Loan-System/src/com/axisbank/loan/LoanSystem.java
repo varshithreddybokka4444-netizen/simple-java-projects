@@ -1,4 +1,4 @@
-package src.com.axisbank.loan;
+package com.axisbank.loan;
 
 public class LoanSystem {
        public void applyloan(double amount,int years){

@@ -1,4 +1,4 @@
-package src.com.axisbank.account;
+package com.axisbank.account;
 public class BankAccount{
    private String name ;
     private  long accountnumber;

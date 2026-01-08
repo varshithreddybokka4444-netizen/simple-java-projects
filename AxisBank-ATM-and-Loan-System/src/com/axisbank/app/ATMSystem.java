@@ -1,7 +1,7 @@
-package src.com.axisbank.app;
+package com.axisbank.app;
 import java.util.Scanner;
 
-import src.com.axisbank.account.*;
+import com.axisbank.account.*;
 class ATMSystem {
     public static void main(String[] args) {
         

@@ -1,7 +1,7 @@
-package src.com.axisbank.app;
+package com.axisbank.app;
 
 import java.util.Scanner;
-import src.com.axisbank.loan.LoanSystem;
+import com.axisbank.loan.LoanSystem;
 
 public class LoanDemo {
     public static void main(String[] args) {
