@@ -1,17 +1,17 @@
 package com.librarymanagement.model;
 
 public class Member {
-    private final int memberId;
+    private final String memberId;
     private String name;
     private String email;
     private boolean active = true;
 
-    public Member(int memberId, String name, String email) {
+    public Member(String memberId, String name, String email) {
         this.memberId = memberId;
         this.name = name;
         this.email = email;
     }
-    public int getMemberId() {
+    public String getMemberId() {
         return memberId;
     }
     public String getName() {

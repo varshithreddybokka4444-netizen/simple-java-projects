@@ -14,7 +14,7 @@ public class BookCopy {
     public String getIsbn() {
         return isbn;
     }
-    public String getBookCopyID() {
+    public String getBookCopyId() {
         return bookCopyID;
     }
     public boolean getAvailability(){

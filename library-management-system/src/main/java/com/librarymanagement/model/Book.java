@@ -28,14 +28,21 @@ public class Book{
     }
 
     public void setPublisher(String publisher) {
-
         this.publisher = publisher;
     }
-    public String getISBN() {
+    public String getIsbn() {
         return isbn;
     }
 
 
-
-
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Title :").append(title).append("\n")
+                .append("Author :").append(author).append("\n")
+                .append("Publisher :").append(publisher).append("\n")
+                .append("ISBN :").append(isbn).append("\n");
+        return sb.toString();
+    }
 }
+
