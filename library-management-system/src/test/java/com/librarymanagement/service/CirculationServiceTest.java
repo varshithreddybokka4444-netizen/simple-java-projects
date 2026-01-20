@@ -15,12 +15,18 @@ class CirculationServiceTest {
 
         Member member = new Member("M1", "Alice", "alice@test.com");
         BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
-        MemberRepository mrepo = new MemberRepository();
-        mrepo.addMember(member);
-        BookCopyRepository copyrepo = new BookCopyRepository();
-        copyrepo.addCopy(copy);
-        LoanRepository loanrepo = new LoanRepository();
-        
+        MemberRepository memberRepository = new MemberRepository();
+        memberRepository.addMember(member);
+        BookCopyRepository bookCopyRepository= new BookCopyRepository();
+        bookCopyRepository.addCopy(copy);
+        LoanRepository loanRepository = new LoanRepository();
+        CirculationService circulationService =
+                new CirculationService(memberRepository, bookCopyRepository, loanRepository);
+
+        circulationService.issueBook("M1", "COPY-1");
+
+        assertEquals("M1",loanRepository.getMemberIdForcopy("COPY-1"));
+        assertFalse(copy.isAvailable());
 
     }
 }
