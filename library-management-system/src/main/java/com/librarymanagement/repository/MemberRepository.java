@@ -15,7 +15,10 @@ public void addMember(Member member){
 public Member fingMemberById(String memberId){
     return members.get(memberId);
 }
-public Collection<Member> getAll(){
+public Collection<Member> getAllMembers(){
     return Collections.unmodifiableCollection(members.values());
+    }
+    public boolean isMember(String memberId){
+    return members.containsKey(memberId);
     }
 }

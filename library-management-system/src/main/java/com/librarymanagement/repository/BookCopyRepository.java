@@ -9,7 +9,7 @@ public class BookCopyRepository {
     public void addCopy(BookCopy copy){
         copies.put(copy.getBookCopyId(),copy);
     }
-    public BookCopy findCopyById(String copyId){
+    public BookCopy findBookCopyById(String copyId){
         return copies.get(copyId);
     }
     public Collection<BookCopy> allCopies(){

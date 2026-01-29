@@ -1,0 +1,12 @@
+com\librarymanagement\App.class
+com\librarymanagement\model\BookCopy.class
+com\librarymanagement\repository\MemberRepository.class
+com\librarymanagement\model\Book.class
+com\librarymanagement\repository\BookRepository.class
+com\librarymanagement\service\CatalogService.class
+com\librarymanagement\repository\LoanRepository.class
+com\librarymanagement\service\LibraryService.class
+com\librarymanagement\service\ServiceResult.class
+com\librarymanagement\service\CirculationService.class
+com\librarymanagement\model\Member.class
+com\librarymanagement\repository\BookCopyRepository.class

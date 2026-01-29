@@ -1,0 +1,4 @@
+com\librarymanagement\service\CirculationServiceTest.class
+com\librarymanagement\model\MemberTest.class
+com\librarymanagement\model\BookTest.class
+com\librarymanagement\model\BookCopyTest.class

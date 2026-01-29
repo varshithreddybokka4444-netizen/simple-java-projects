@@ -5,4 +5,10 @@ public class LoanRepository{
     public void recordLoan(String bookCopyId,String memberId){
         map.put(bookCopyId,memberId);
     }
+    public String getMemberIdForcopy(String bookCopyId){
+        return map.get(bookCopyId);
+    }
+    public boolean bookIssued(String bookCopyId){
+        return map.containsKey(bookCopyId);
+    }
 }

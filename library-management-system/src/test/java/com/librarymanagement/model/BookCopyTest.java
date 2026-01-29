@@ -26,6 +26,6 @@ class BookCopyTest {
 
         copy.setAvailability(false);
 
-        assertFalse(copy.getAvailability());
+        assertFalse(copy.isAvailable());
     }
 }

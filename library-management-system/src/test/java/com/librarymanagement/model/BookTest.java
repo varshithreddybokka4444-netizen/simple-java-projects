@@ -8,7 +8,7 @@ class BookTest {
 
     @Test
     void shouldCreateBookWithCorrectValues() {
-        Book book = new Book("Adventures Of Sherlock Holmes",
+        Book book = new Book("Adventures of Sherlock Holmes",
                 "Arthur Conan Doyle",
                 "Penguin",
                 "978-0140057249");
@@ -22,7 +22,7 @@ class BookTest {
     }
     @Test
     void shouldAllowUpdatingDescriptiveFields() {
-        Book book = new Book("Adventures Of Sherlock Holmes",
+        Book book = new Book("Adventures of Sherlock Holmes",
                 "Arthur Conan Doyle",
                 "Penguin",
                 "978-0140057249");
@@ -37,7 +37,7 @@ class BookTest {
     }
     @Test
     void isbnShouldRemainUnchanged() {
-        Book book = new Book("Adventures Of Sherlock Holmes",
+        Book book = new Book("Adventures of Sherlock Holmes",
                 "Arthur Conan Doyle",
                 "Penguin",
                 "978-0140057249");

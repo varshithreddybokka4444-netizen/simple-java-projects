@@ -17,7 +17,7 @@ public class BookCopy {
     public String getBookCopyId() {
         return bookCopyID;
     }
-    public boolean getAvailability(){
+    public boolean isAvailable() {
         return available;
     }
 
