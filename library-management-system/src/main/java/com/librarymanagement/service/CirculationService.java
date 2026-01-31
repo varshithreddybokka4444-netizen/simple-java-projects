@@ -31,5 +31,13 @@ public class CirculationService {
    copy.setAvailability(false);
 
     }
+    public void returnBook(String bookCopyId){
+        if(loanRepository.bookIssued(bookCopyId)){
+           loanRepository.removeRecord(bookCopyId);
+        }
+        else{
+            throw new IllegalStateException("Book already returned!");
+        }
+    }
 
 }

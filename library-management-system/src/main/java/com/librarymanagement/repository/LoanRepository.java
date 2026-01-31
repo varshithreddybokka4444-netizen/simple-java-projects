@@ -11,4 +11,7 @@ public class LoanRepository{
     public boolean bookIssued(String bookCopyId){
         return map.containsKey(bookCopyId);
     }
+    public void removeRecord(String bookCopyId){
+        map.remove(bookCopyId);
+    }
 }

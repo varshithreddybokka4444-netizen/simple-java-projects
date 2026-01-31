@@ -15,13 +15,10 @@ class CirculationServiceTest {
 
         Member member = new Member("M1", "Alice", "alice@test.com");
         BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
-        MemberRepository memberRepository = new MemberRepository();
-        memberRepository.addMember(member);
-        BookCopyRepository bookCopyRepository = new BookCopyRepository();
-        bookCopyRepository.addCopy(copy);
         LoanRepository loanRepository = new LoanRepository();
         CirculationService circulationService =
-                new CirculationService(memberRepository, bookCopyRepository, loanRepository);
+                createCirculationService(member,copy, loanRepository);
+        circulationService.issueBook("M1", "COPY-1");
 
         circulationService.issueBook("M1", "COPY-1");
 
@@ -30,19 +27,16 @@ class CirculationServiceTest {
     }
         @Test
         void shouldNotIssueBookWhenCopyIsAlreadyIssued() {
-            Member member2 = new Member("M1", "Alice", "alice@test.com");
-            BookCopy copy2 = new BookCopy("ISBN-1", "COPY-1");
-            MemberRepository memberRepository2 = new MemberRepository();
-            memberRepository2.addMember(member2);
-            BookCopyRepository bookCopyRepository2 = new BookCopyRepository();
-            bookCopyRepository2.addCopy(copy2);
-            LoanRepository loanRepository2 = new LoanRepository();
-            CirculationService circulationService2 =
-                    new CirculationService(memberRepository2, bookCopyRepository2, loanRepository2);
+            Member member = new Member("M1", "Alice", "alice@test.com");
+            BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
+            LoanRepository loanRepository = new LoanRepository();
+            CirculationService circulationService =
+                    createCirculationService(member,copy, loanRepository);
+            circulationService.issueBook("M1", "COPY-1");
 
-            circulationService2.issueBook("M1", "COPY-1");
+            circulationService.issueBook("M1", "COPY-1");
             assertThrows(IllegalStateException.class,() ->
-                    circulationService2.issueBook("M1", "COPY-1"));
+                    circulationService.issueBook("M1", "COPY-1"));
         }
             @Test
             void shouldNotIssueBookIfMemberIsNotFound() {
@@ -66,18 +60,62 @@ class CirculationServiceTest {
             void shouldNotIssueBookIfMemberIsNotActive() {
                 Member member = new Member("M1", "Alice", "alice@test.com");
                 BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
-                MemberRepository memberRepository = new MemberRepository();
-                memberRepository.addMember(member);
-                BookCopyRepository bookCopyRepository = new BookCopyRepository();
-                bookCopyRepository.addCopy(copy);
                 LoanRepository loanRepository = new LoanRepository();
                 CirculationService circulationService =
-                        new CirculationService(memberRepository, bookCopyRepository, loanRepository);
+                        createCirculationService(member,copy, loanRepository);
+                circulationService.issueBook("M1", "COPY-1");
                 member.setIsActive(false);
                 assertThrows(IllegalStateException.class, () ->
                         circulationService.issueBook("M1", "COPY-1")
                 );
 
             }
-        }
+            @Test
+    public void shouldReturnBookWhenCopyIsIssued(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
+        LoanRepository loanRepository = new LoanRepository();
+                CirculationService circulationService =
+                        createCirculationService(member,copy, loanRepository);
+        circulationService.issueBook("M1", "COPY-1");
+        circulationService.returnBook(copy.getBookCopyId());
+        assertFalse(loanRepository.bookIssued(copy.getBookCopyId()));
+            }
+            @Test
+            public void shouldNotAllowReturningBookTwice(){
+       Member member = new Member("M1", "Alice", "alice@test.com");
+       BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
+
+       LoanRepository loanRepository = new LoanRepository();
+
+       CirculationService circulationService =
+             createCirculationService(member,copy, loanRepository);
+                circulationService.issueBook("M1", "COPY-1");
+       circulationService.returnBook(copy.getBookCopyId());
+
+       assertThrows(IllegalStateException.class,()->circulationService.returnBook(copy.getBookCopyId()));
+   }
+   @Test
+   public void shouldNotReturnBookWhenCopyIsNotIssued(){
+       Member member = new Member("M1", "Alice", "alice@test.com");
+       BookCopy bookCopy = new BookCopy("ISBN-1", "COPY-1");
+
+       LoanRepository loanRepository = new LoanRepository();
+       CirculationService circulationService =
+               createCirculationService(member, bookCopy, loanRepository);
+       assertThrows(IllegalStateException.class,()->circulationService.returnBook(bookCopy.getBookCopyId()));
+   }
+
+private CirculationService createCirculationService(Member member,BookCopy bookCopy,LoanRepository loanRepository){
+        MemberRepository memberRepository = new MemberRepository();
+        memberRepository.addMember(member);
+        BookCopyRepository bookCopyRepository = new BookCopyRepository();
+        bookCopyRepository.addCopy(bookCopy);
+        return new CirculationService(memberRepository,bookCopyRepository,loanRepository);
+   }
+   public void shouldRenewLoanWhenBookIsIssued(){
+
+   }
+
+}
 
