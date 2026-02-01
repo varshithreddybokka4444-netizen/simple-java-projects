@@ -1,5 +1,6 @@
 package com.librarymanagement.service;
 import com.librarymanagement.model.BookCopy;
+import com.librarymanagement.model.Loan;
 import com.librarymanagement.model.Member;
 import com.librarymanagement.repository.BookCopyRepository;
 import com.librarymanagement.repository.MemberRepository;
@@ -18,7 +19,7 @@ public class CirculationService {
         this.bookCopyRepository = bookCopyRepository;
         this.loanRepository = loanRepository;
     }
-    public void issueBook(String bookCopyId,String memberId) {
+    public void issueBook(String memberId,String bookCopyId) {
         if (loanRepository.bookIssued(bookCopyId)) {
             throw new IllegalStateException("Book already issued");
         }
@@ -38,12 +39,30 @@ public class CirculationService {
 
     }
     public void returnBook(String bookCopyId){
+
         if(loanRepository.bookIssued(bookCopyId)){
-           loanRepository.removeRecord(bookCopyId);
+            Loan loan = loanRepository.getLoan(bookCopyId);
+            if(loan.isActive()){
+                loanRepository.closeLoan(bookCopyId);
+            }
+            else{
+                throw new IllegalStateException("Book already returned!");
+            }
         }
-        else{
-            throw new IllegalStateException("Book already returned!");
+        else {
+            throw new IllegalStateException("Book was never Issued!");
         }
+    }
+    public void renewLoan(String bookCopyId){
+
+            Loan loan = loanRepository.getLoan(bookCopyId);
+            if(loan==null) {
+                throw new IllegalStateException("Book is not Issued!");
+            }
+                if(!loan.isActive()){
+                throw new IllegalStateException("Book is Already returned!");
+            }
+        loan.renewLoan();
     }
 
 }

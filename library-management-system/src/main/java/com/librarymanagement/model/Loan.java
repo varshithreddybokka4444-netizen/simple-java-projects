@@ -13,6 +13,7 @@ public class Loan {
     }
     public void renewLoan(){
         dueDate = dueDate.plusDays(14);
+        renewCount++;
     }
     public boolean isOverDue(LocalDate today){
         return today.isAfter(dueDate);
@@ -20,4 +21,16 @@ public class Loan {
     public void closeLoan(){
         isActive = false;
     }
+    public void openLoan(){isActive = true;
+    }
+    public String getMemberId(){
+        return memberId;
+    }
+    public boolean isActive(){
+        return isActive;
+    }
+    public void setActive(boolean isActive){
+        this.isActive = isActive;
+    }
+
 }
