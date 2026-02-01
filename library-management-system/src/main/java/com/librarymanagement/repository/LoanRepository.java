@@ -1,9 +1,12 @@
 package com.librarymanagement.repository;
+import java.time.LocalDate;
 import java.util.*;
+import com.librarymanagement.model.Loan;
+
 public class LoanRepository{
-    Map<String,String> map = new HashMap<>();
-    public void recordLoan(String bookCopyId,String memberId){
-        map.put(bookCopyId,memberId);
+List<Loan> = new
+    public void recordLoan(String bookCopyId, String memberId, LocalDate issueDate){
+      Loan loan = new Loan(bookCopyId,memberId,issueDate);
     }
     public String getMemberIdForcopy(String bookCopyId){
         return map.get(bookCopyId);

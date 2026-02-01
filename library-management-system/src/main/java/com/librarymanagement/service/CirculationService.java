@@ -5,6 +5,10 @@ import com.librarymanagement.repository.BookCopyRepository;
 import com.librarymanagement.repository.MemberRepository;
 import com.librarymanagement.repository.LoanRepository;
 
+import java.time.Clock;
+import java.time.LocalDate;
+
+
 public class CirculationService {
     private MemberRepository memberRepository;
     private BookCopyRepository bookCopyRepository;
@@ -14,7 +18,7 @@ public class CirculationService {
         this.bookCopyRepository = bookCopyRepository;
         this.loanRepository = loanRepository;
     }
-    public void issueBook(String memberId,String bookCopyId) {
+    public void issueBook(String bookCopyId,String memberId) {
         if (loanRepository.bookIssued(bookCopyId)) {
             throw new IllegalStateException("Book already issued");
         }
@@ -25,8 +29,10 @@ public class CirculationService {
         if(!member.isActive()){
             throw new IllegalStateException("Member is not active!");
         }
+        Clock clock = Clock.systemDefaultZone();
+        LocalDate today = LocalDate.now(clock);
 
-        loanRepository.recordLoan(bookCopyId,memberId);
+        loanRepository.recordLoan(bookCopyId,memberId,today);
         BookCopy copy = bookCopyRepository.findBookCopyById(bookCopyId);
    copy.setAvailability(false);
 

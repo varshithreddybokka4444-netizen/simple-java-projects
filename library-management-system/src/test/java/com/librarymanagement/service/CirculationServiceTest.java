@@ -105,6 +105,15 @@ class CirculationServiceTest {
                createCirculationService(member, bookCopy, loanRepository);
        assertThrows(IllegalStateException.class,()->circulationService.returnBook(bookCopy.getBookCopyId()));
    }
+    public void shouldRenewLoanWhenBookIsIssued(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy bookCopy = new BookCopy("ISBN-1", "COPY-1");
+
+        LoanRepository loanRepository = new LoanRepository();
+        CirculationService circulationService =
+                createCirculationService(member, bookCopy, loanRepository);
+
+    }
 
 private CirculationService createCirculationService(Member member,BookCopy bookCopy,LoanRepository loanRepository){
         MemberRepository memberRepository = new MemberRepository();
@@ -113,9 +122,7 @@ private CirculationService createCirculationService(Member member,BookCopy bookC
         bookCopyRepository.addCopy(bookCopy);
         return new CirculationService(memberRepository,bookCopyRepository,loanRepository);
    }
-   public void shouldRenewLoanWhenBookIsIssued(){
 
-   }
 
 }
 
