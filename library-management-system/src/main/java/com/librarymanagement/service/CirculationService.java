@@ -8,18 +8,25 @@ import com.librarymanagement.repository.LoanRepository;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.List;
 
 
 public class CirculationService {
     private MemberRepository memberRepository;
     private BookCopyRepository bookCopyRepository;
     private LoanRepository loanRepository;
+    private static int borrowLimit = 3;
     public CirculationService(MemberRepository memberRepository, BookCopyRepository bookCopyRepository, LoanRepository loanRepository) {
         this.memberRepository = memberRepository;
         this.bookCopyRepository = bookCopyRepository;
         this.loanRepository = loanRepository;
     }
-    public void issueBook(String memberId,String bookCopyId) {
+    public void issueBook(String memberId,String bookCopyId) throws IllegalStateException {
+        if (borrowedBooks(memberId) >= borrowLimit) {
+            throw new IllegalStateException(
+                    "Borrow limit exceeded! Maximum allowed: " + borrowLimit
+            );
+        }
         if (loanRepository.bookIssued(bookCopyId)) {
             throw new IllegalStateException("Book already issued");
         }
@@ -63,6 +70,15 @@ public class CirculationService {
                 throw new IllegalStateException("Book is Already returned!");
             }
         loan.renewLoan();
+    }
+    public boolean isAvailable(String bookCopyId){
+        return !loanRepository.bookIssued(bookCopyId);
+    }
+    public List<Loan> getActiveLoansForMember(String memberId){
+    return loanRepository.getActiveLoansByMember(memberId);
+    }
+    private int borrowedBooks(String memberId){
+        return loanRepository.getActiveLoansByMember(memberId).size();
     }
 
 }

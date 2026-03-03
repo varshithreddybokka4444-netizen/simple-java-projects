@@ -11,7 +11,8 @@ HashMap<String,Loan> map = new HashMap<>();
       map.put(bookCopyId,loan);
     }
     public String getMemberIdForcopy(String bookCopyId){
-        return map.get(bookCopyId).getMemberId();
+        Loan loan = map.get(bookCopyId);
+        return (loan!=null)? loan.getMemberId() : null;
     }
     public boolean bookIssued(String bookCopyId){
    if(map.containsKey(bookCopyId)){
@@ -31,6 +32,15 @@ HashMap<String,Loan> map = new HashMap<>();
     public void closeLoan(String bookCopyId){
         Loan loan = map.get(bookCopyId);
         loan.setActive(false);
+    }
+    public List<Loan> getActiveLoansByMember(String memberId){
+        List<Loan> activeLoans = new ArrayList<>();
+        for(Loan loan : map.values()){
+            if(loan.getMemberId().equals(memberId)){
+                activeLoans.add(loan);
+            }
+        }
+        return activeLoans;
     }
 
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +31,7 @@ class CirculationServiceTest {
         assertFalse(copy.isAvailable());
     }
         @Test
-        void shouldNotIssueBookWhenCopyIsAlreadyIssued() {
+        void ShouldNotIssueBookWhenCopyIsAlreadyIssued() {
             Member member = new Member("M1", "Alice", "alice@test.com");
             BookCopy copy = new BookCopy("ISBN-1", "COPY-1");
             LoanRepository loanRepository = new LoanRepository();
@@ -154,6 +155,76 @@ class CirculationServiceTest {
                 () -> circulationService.renewLoan("COPY-1"));
 
     }
+    @Test
+    public void shouldShowBookAvailableWhenNotIssued(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy bookCopy = new BookCopy("ISBN-1", "COPY-1");
+
+        LoanRepository loanRepository = new LoanRepository();
+
+        CirculationService circulationService = createCirculationService(member,bookCopy,loanRepository);
+
+        boolean Available = circulationService.isAvailable(bookCopy.getBookCopyId());
+        assertTrue(Available);
+
+    }
+    @Test
+    public void shouldReturnFalseWhenBookNotAvailable(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy bookCopy = new BookCopy("ISBN-1", "COPY-1");
+        LoanRepository loanRepository = new LoanRepository();
+
+        CirculationService circulationService = createCirculationService(member,bookCopy,loanRepository);
+
+        circulationService.issueBook(member.getMemberId(),bookCopy.getBookCopyId());
+
+        boolean Available = circulationService.isAvailable(bookCopy.getBookCopyId());
+        assertFalse(Available);
+    }
+    @Test
+    public void shouldReturnActiveLoansForMembers(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy bookCopy = new BookCopy("ISBN-1", "COPY-1");
+        LoanRepository loanRepository = new LoanRepository();
+
+        CirculationService circulationService = createCirculationService(member,bookCopy,loanRepository);
+
+        circulationService.issueBook(member.getMemberId(),bookCopy.getBookCopyId());
+
+        List<Loan>  loans = circulationService.getActiveLoansForMember(member.getMemberId());
+        assertEquals(1, loans.size());
+        assertEquals(loans.get(0).getMemberId(),member.getMemberId());
+        assertTrue(loans.get(0).isActive());
+    }
+     @Test
+    public void shouldNotLendMoreThanLoanLimit(){
+        Member member = new Member("M1", "Alice", "alice@test.com");
+        BookCopy bookCopy1 = new BookCopy("ISBN-1", "COPY-1");
+        BookCopy bookCopy2 =new BookCopy("ISBN-2", "COPY-2");
+        BookCopy bookCopy3 =new BookCopy("ISBN-3", "COPY-3");
+        BookCopy bookCopy4 =new BookCopy("ISBN-4", "COPY-4");
+        LoanRepository loanRepository = new LoanRepository();
+        MemberRepository memberRepository = new MemberRepository();
+        memberRepository.addMember(member);
+        BookCopyRepository bookCopyRepository = new BookCopyRepository();
+        bookCopyRepository.addCopy(bookCopy1);
+        bookCopyRepository.addCopy(bookCopy2);
+        bookCopyRepository.addCopy(bookCopy3);
+        bookCopyRepository.addCopy(bookCopy4);
+
+        CirculationService circulationService =
+                new CirculationService(memberRepository,bookCopyRepository,loanRepository);
+       circulationService.issueBook(member.getMemberId(),bookCopy1.getBookCopyId());
+        circulationService.issueBook(member.getMemberId(),bookCopy2.getBookCopyId());
+        circulationService.issueBook(member.getMemberId(),bookCopy3.getBookCopyId());
+        assertThrows(IllegalStateException.class, () ->
+                circulationService.issueBook(member.getMemberId(), bookCopy4.getBookCopyId())
+        );
+
+
+
+    }
+
 
 
 private CirculationService createCirculationService(Member member,BookCopy bookCopy,LoanRepository loanRepository){

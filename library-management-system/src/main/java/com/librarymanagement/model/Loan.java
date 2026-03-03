@@ -1,8 +1,8 @@
 package com.librarymanagement.model;
 import java.time.LocalDate;
 public class Loan {
-    String bookCopyId;
-    String memberId;
+    private String bookCopyId;
+    private String memberId;
     LocalDate dueDate;
     int renewCount = 0;
     boolean isActive = true;
