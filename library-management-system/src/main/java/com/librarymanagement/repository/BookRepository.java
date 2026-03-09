@@ -15,6 +15,10 @@ public class BookRepository {
         return books.get(isbn);
     }
 
+    public boolean hasBook(String isbn){
+            return books.containsKey(isbn) ? true : false;
+    }
+
     public Collection<Book> findAll() {
         return Collections.unmodifiableCollection(books.values());
     }

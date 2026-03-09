@@ -1,64 +1,76 @@
 package com.librarymanagement.service;
 import com.librarymanagement.model.*;
+import com.librarymanagement.repository.BookCopyRepository;
 import com.librarymanagement.repository.BookRepository;
+import com.librarymanagement.service.Validator;
 
 public class CatalogService {
 
 
-        private BookRepository bookRepository;
+    private BookRepository bookRepository;
+    private BookCopyRepository bookCopyRepository;
+    public CatalogService(BookRepository bookRepository,BookCopyRepository bookCopyRepository) {
+        this.bookRepository = bookRepository;
+        this.bookCopyRepository = bookCopyRepository;
+    }
 
-        public CatalogService(BookRepository bookRepository) {
-            this.bookRepository = bookRepository;
+Validator validator = new Validator();
+    public ServiceResult addBook(Book book) throws InvalidBookException {
+        if(bookRepository.hasBook(book.getIsbn())){
+            throw new InvalidBookException("Book with the isbn already exists!");
         }
+        validator.validate(book.getTitle(),"Title");
+        validator.validate(book.getAuthor(),"Author");
+        validator.validate(book.getPublisher(),"Publisher");
+        validator.validate(book.getIsbn(),"ISBN");
 
-    public ServiceResult addBook(String title,String author,String publisher,String isbn) {
-        if (title == null) {
-            return new ServiceResult(false, "Invalid Book title!");
-        } else if (author == null) {
-            return new ServiceResult(false, "Invalid Author name!");
-        } else if (publisher == null) {
-            return new ServiceResult(false, "Invalid publisher name!");
-        } else if (isbn == null) {
-            return new ServiceResult(false, "Invalid ISBN number!");
-        }
-
-        Book book = new Book(title, author, publisher, isbn);
         bookRepository.addBook(book);
-
-        return null;
+        return new ServiceResult(true, "Book added successfully!");
     }
+
+
     public ServiceResult updateBook(String title,String author,String publisher,String isbn){
-        if (title == null) {
-            return new ServiceResult(false, "Invalid Book title!");
-        } else if (author == null) {
-            return new ServiceResult(false, "Invalid Author name!");
-        } else if (publisher == null) {
-            return new ServiceResult(false, "Invalid publisher name!");
+        Book book = bookRepository.findByIsbn(isbn);
+        if (title != null) {
+            book.setTitle(title);
         }
-        Book book = bookRepository.findByIsbn(isbn);
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPublisher(publisher);
-                return null;
-    }
-    public ServiceResult updateBookTitle(String title,String isbn){
-        if (title == null) {
-            return new ServiceResult(false, "Invalid Book title!");
+        if (author == null) {
+            book.setAuthor(author);
         }
-        Book book = bookRepository.findByIsbn(isbn);
-        book.setTitle(title);
-        return null;
+        if (publisher == null) {
+            book.setPublisher(publisher);
+        }
+        return new ServiceResult(true, "Book updated successfully!");
     }
-    public ServiceResult updateBookAuthor(String author,String isbn){
-            if (author == null) {
-            return new ServiceResult(false, "Invalid Author name!");
-           }
-        Book book = bookRepository.findByIsbn(isbn);
 
-        book.setAuthor(author);
-        return null;
+    public ServiceResult addBookCopy(String isbn) throws Exception {
+        validator.validate(isbn,"ISBN");
+        if(!bookRepository.hasBook(isbn)){
+                throw new Exception("Please add book before adding BookCopy!");
+            }
+
+        String bookCopyId = generateCopyId();
+        BookCopy copy = new BookCopy(isbn,bookCopyId);
+        bookCopyRepository.addCopy(copy);
+
+        return new ServiceResult(true, "Book Copy added Successfully! ");
+
     }
-}
+
+
+
+
+
+    int copyCounter = 1;
+    private String generateCopyId(){
+        return String.format("CPY03%d",copyCounter++);
+    }
+
+     }
+
+
+
+
 
 
 
