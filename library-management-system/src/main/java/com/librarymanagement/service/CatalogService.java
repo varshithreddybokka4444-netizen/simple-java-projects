@@ -31,13 +31,16 @@ Validator validator = new Validator();
 
     public ServiceResult updateBook(String title,String author,String publisher,String isbn){
         Book book = bookRepository.findByIsbn(isbn);
+        if(book == null){
+            throw new IllegalStateException("Book not found");
+        }
         if (title != null) {
             book.setTitle(title);
         }
-        if (author == null) {
+        if (author != null) {
             book.setAuthor(author);
         }
-        if (publisher == null) {
+        if (publisher != null) {
             book.setPublisher(publisher);
         }
         return new ServiceResult(true, "Book updated successfully!");
@@ -63,7 +66,7 @@ Validator validator = new Validator();
 
     int copyCounter = 1;
     private String generateCopyId(){
-        return String.format("CPY03%d",copyCounter++);
+        return String.format("CPY%03d",copyCounter++);
     }
 
      }

@@ -22,11 +22,17 @@ public class CirculationService {
         this.loanRepository = loanRepository;
     }
     public void issueBook(String memberId,String bookCopyId) throws IllegalStateException {
+        BookCopy copy = bookCopyRepository.findBookCopyById(bookCopyId);
+
+        if(copy == null){
+            throw new LibraryException("Book copy not found");
+        }
         if (borrowedBooks(memberId) >= borrowLimit) {
             throw new IllegalStateException(
                     "Borrow limit exceeded! Maximum allowed: " + borrowLimit
             );
         }
+
         if (loanRepository.bookIssued(bookCopyId)) {
             throw new IllegalStateException("Book already issued");
         }
@@ -41,8 +47,8 @@ public class CirculationService {
         LocalDate today = LocalDate.now(clock);
 
         loanRepository.recordLoan(bookCopyId,memberId,today);
-        BookCopy copy = bookCopyRepository.findBookCopyById(bookCopyId);
-   copy.setAvailability(false);
+
+       copy.setAvailability(false);
 
     }
     public void returnBook(String bookCopyId){
@@ -51,6 +57,8 @@ public class CirculationService {
             Loan loan = loanRepository.getLoan(bookCopyId);
             if(loan.isActive()){
                 loanRepository.closeLoan(bookCopyId);
+                BookCopy copy = bookCopyRepository.findBookCopyById(bookCopyId);
+                copy.setAvailability(true);
             }
             else{
                 throw new IllegalStateException("Book already returned!");
@@ -59,6 +67,7 @@ public class CirculationService {
         else {
             throw new IllegalStateException("Book was never Issued!");
         }
+
     }
     public void renewLoan(String bookCopyId){
 

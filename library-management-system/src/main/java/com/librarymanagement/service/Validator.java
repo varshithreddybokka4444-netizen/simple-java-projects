@@ -1,9 +1,10 @@
 package com.librarymanagement.service;
 
 public class Validator {
-    public void validate(String value,String fieldName) throws InvalidBookException {
-        if (value == null || value.isBlank()) {
-            throw new InvalidBookException(fieldName + " is required!");
+    public void validate(String data,String dataType){
+        if(data==null||data.isBlank()){
+            System.out.println(dataType + " cannot be null or blank");
+            return;
         }
     }
 }
